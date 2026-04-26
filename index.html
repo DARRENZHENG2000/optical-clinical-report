@@ -443,29 +443,42 @@
 <body>
 
 <script>
-const CORRECT_PASSWORD = 'APOLLODZ';
+document.addEventListener('DOMContentLoaded', function() {
+    const CORRECT_PASSWORD = 'APOLLODZ';
+    const loginScreen = document.getElementById('login-screen');
+    const mainContainer = document.getElementById('main-container');
+    const passwordInput = document.getElementById('password-input');
 
-// 检查是否已验证
-function isAuthenticated() {
-    return sessionStorage.getItem('apollo_auth') === 'true';
-}
-
-function checkPassword() {
-    const input = document.getElementById('password-input').value;
-    if (input === CORRECT_PASSWORD) {
-        sessionStorage.setItem('apollo_auth', 'true');
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-container').style.display = 'block';
-    } else {
-        alert('密码错误，请重试');
+    // 检查是否已验证
+    function isAuthenticated() {
+        return sessionStorage.getItem('apollo_auth') === 'true';
     }
-}
 
-// 页面加载时检查
-window.addEventListener('load', function() {
+    function checkPassword() {
+        const input = passwordInput.value;
+        if (input === CORRECT_PASSWORD) {
+            sessionStorage.setItem('apollo_auth', 'true');
+            if(loginScreen) loginScreen.style.display = 'none';
+            if(mainContainer) mainContainer.style.display = 'block';
+        } else {
+            alert('密码错误，请重试');
+        }
+    }
+
+    // 绑定事件
+    if (document.getElementById('login-btn')) {
+        document.getElementById('login-btn').addEventListener('click', checkPassword);
+    }
+    if (passwordInput) {
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+    }
+
+    // 页面加载时检查
     if (isAuthenticated()) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-container').style.display = 'block';
+        if(loginScreen) loginScreen.style.display = 'none';
+        if(mainContainer) mainContainer.style.display = 'block';
     }
 });
 
